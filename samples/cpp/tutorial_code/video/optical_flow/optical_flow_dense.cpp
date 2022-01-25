@@ -8,9 +8,28 @@
 using namespace cv;
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-    VideoCapture capture(samples::findFile("vtest.avi"));
+    const string about =
+      "This sample demonstrates dense Optical Flow calculation.";
+    const string keys =
+        "{ h help |      | print this help message }"
+        "{ @image | vtest.avi | path to image file }";
+    CommandLineParser parser(argc, argv, keys);
+    parser.about(about);
+    if (parser.has("help"))
+    {
+        parser.printMessage();
+        return 0;
+    }
+    string filename = samples::findFile(parser.get<string>("@image"));
+    if (!parser.check())
+    {
+        parser.printErrors();
+        return 0;
+    }
+
+    VideoCapture capture(filename);
     if (!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open file!" << endl;
